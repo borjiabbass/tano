@@ -1,5 +1,4 @@
 <?php
-namespace IPPanel;
 class Sms{
  
     
@@ -19,9 +18,6 @@ class Sms{
     public function generateCode(){
         $this->verifidCode= mt_rand(100000,999999);
        $_SESSION['verfyCode']= $this->verifidCode;
-    }
-    public function Message(){
-        return "نرم افزار تانوپلاس،کد تایید شما:".$this->verifidCode;
     }
     public function confirm($code){
             if($code ==$_SESSION['verfyCode'])

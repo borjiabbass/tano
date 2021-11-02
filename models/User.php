@@ -1,5 +1,4 @@
 <?php
-namespace IPPanel;
 class User{
  
     // database connection and table name

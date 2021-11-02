@@ -7,17 +7,15 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 session_start();
 
-require 'autoload.php';
+require 'vendor/autoload.php';
+require 'models/Sms.php';
 
 $data = json_decode(file_get_contents("php://input"));
 $apiKey = "3EcoWZDkLnT_d01id3fkkaRz0ZOLDD46giug2AcYlXE=";
 $client = new \IPPanel\Client($apiKey);
-$sms = new \IPPanel\Sms($data->phone);
+$sms= new Sms($data->phone);
 $sms->generateCode();
-$text=$sms->Message();
-$bulkID = $client->send(
-    "+983000505",          // originator
-    ["$sms->phone"],    // recipients
-    "$text" // message
-);
+
+$pattern = $client->sendPattern("mveg7tva5j", "983000505", $sms->phone, ['name' => "",'verification-code'=>$sms->verifidCode]);
+
 
