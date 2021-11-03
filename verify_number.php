@@ -16,6 +16,4 @@ $client = new \IPPanel\Client($apiKey);
 $sms= new Sms($data->phone);
 $sms->generateCode();
 
-$pattern = $client->sendPattern("mveg7tva5j", "983000505", $sms->phone, ['name' => "",'verification-code'=>$sms->verifidCode]);
-
-
+$pattern = $client->sendPattern("mveg7tva5j", "983000505", "$sms->phone", ['name' => "",'verification-code'=>"$sms->verifidCode"]);

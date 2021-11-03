@@ -10,10 +10,7 @@ class Sms{
  
     // constructor
     public function __construct($phone){
-        $this->phone =$this->getPhone($phone);
-    }
-    public function getPhone($phone){
-        return "98".substr($phone, 1);
+        $this->phone =$phone;
     }
     public function generateCode(){
         $this->verifidCode= mt_rand(100000,999999);

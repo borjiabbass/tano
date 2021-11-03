@@ -1,13 +1,13 @@
 <?php
 session_start();
 
-require 'vendor/autoload.php';
-require 'models/Sms.php';
 require 'models/database.php';
 require 'models/User.php';
 require 'models/token.php';
 require 'models/res.php';
 $data = json_decode(file_get_contents("php://input"));
+
+
 
 $Database = new Database();
 $db = $Database->getConnection();
@@ -39,6 +39,6 @@ if($sms->confirm($data->code)){
     $resData= array(
         "message"=>"Invalid Code"
     );
-    $res->responseCode(400);
+    $res->responseCode(401);
     $res->response($resData);
 }
