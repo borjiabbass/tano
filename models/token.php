@@ -13,10 +13,11 @@ class Token{
     // object properties
     
     // constructor
-    public function __construct($data){
-        $this->data=$data;
+    public function __construct(){
+        
     }
-    public function generateCode(){
+    public function generateCode($data){
+        $this->data=$data;
         $data=array(
             "iat" => time(),
             "exp" => time() + (60 * 60)*24,
@@ -27,6 +28,16 @@ class Token{
             ));
         $this->tokenCode = JWT::encode($data, $this->key,"HS256");
     }
+    public function TokenVal(){
+        
+       $data=  JWT::decode($_SERVER['HTTP_TOKEN'], $this->key, ['HS256']); 
+       if($data->data){
+           return $data->data;
+       }else{
+           return false;
+       }
+    }
+
    
 
 }

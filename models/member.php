@@ -1,12 +1,12 @@
 <?php
-class User{
+class Member{
  
     // database connection and table name
     private $conn;
-    private $table_name = "registertoken";
+    private $table_name = "users";
  
     // object properties
-    public $phone;
+    public $regId;
     public $id;
  
     // constructor
@@ -38,24 +38,23 @@ class User{
     function GetUserId(){
     
         // insert query
-        $query = "SELECT * FROM  " . $this->table_name ;
-            
+        $query = "SECECT ID FROM  " . $this->table_name . "
+                WHERE 
+                    phone_number = :phone_number";
     
         $stmt = $this->conn->prepare($query);
     
-        print_r($stmt);
+    
         // bind the values
-       // $stmt->bindParam(':phone_number', $this->phone);
-        if($stmt->execute()){
-            echo "dale";
-        };
+        $stmt->bindParam(':phone_number', $this->phone);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-        echo $this->phone;
-        print_r($row);
         $this->id = $row['id'];
-        
-       
+        // execute the query, also check if query was successful
+        if($stmt->execute()){
+            return true;
+        }
+    
+        return false;
     }
     function isAlreadylogin(){
         $query = "SELECT is_already_register
@@ -105,37 +104,6 @@ class User{
         if($num>0){
             return true;
         }
-        return false;
-    }
-    function complate_profile($data){
-    
-        // insert query
-        $query = "UPDATE " . $this->table_name . "
-                SET
-                    is_already_register = :is_already_register , ".
-                    "name = :name , ".
-                    "family = :family , ".
-                    "fav_id = :fave_id , ".
-                    "prof_id = :prof_id_id , ".
-                    "dis = :dis , ".
-                    " where id =".$this->id;
-    
-        $stmt = $this->conn->prepare($query);
-    
-    
-        // bind the values
-        $stmt->bindParam(':is_already_register',1);
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':family', $data['family']);
-        $stmt->bindParam(':prof_id',$data['prof_id']);
-        $stmt->bindParam(':fav_id',$data['fav_id']);
-        $stmt->bindParam(':dis',$data['dis']);
-       
-        // execute the query, also check if query was successful
-        if($stmt->execute()){
-            return true;
-        }
-    
         return false;
     }
     

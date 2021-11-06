@@ -19,14 +19,14 @@ if($sms->confirm($data->code)){
     
     if(!$User->isAlreadyRegister()){
         $User->Register();
-        $User->GetUserId();
+        
     }
-
+        $User->GetUserId();
         $data=array(
             "id" => $User->id,
             "phone" => $User->phone,
         );
-        $token =new Token($data);
+        $token =new Token();
         $token->generateCode($data);
         $resData= array(
             "token"=>$token->tokenCode,
