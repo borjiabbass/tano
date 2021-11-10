@@ -8,7 +8,6 @@ require 'models/User.php';
 require 'models/token.php';
 require 'models/res.php';
 $data = json_decode(file_get_contents("php://input"));
-
 $token =new Token();
 $res= new Res();
 
@@ -16,17 +15,14 @@ if($token->TokenVal()){
     $Database = new Database();
     $db = $Database->getConnection();
     $tokenData=$token->TokenVal();
-    print_r($tokenData);
-    $User = new User($db,$data->phone);
+    $User = new User($db,$tokenData->phone);
+    $User->id=$tokenData->id;
     $User->complate_profile($data);
-
     $resData= array(
-        "token"=>$token->tokenCode,
-        "isARLogin"=>$User->isAlreadyLogin()
+        "message"=>"ok"
     );
     $res->responseCode(200);
     $res->response($resData);
-
 }else{
     $resData= array(
         "message"=>"Invalid Token"

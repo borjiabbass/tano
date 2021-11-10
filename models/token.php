@@ -20,7 +20,7 @@ class Token{
         $this->data=$data;
         $data=array(
             "iat" => time(),
-            "exp" => time() + (60 * 60)*24,
+            "exp" => time() + (60 * 60)*24*30,
             "iss" => $this->iss,
             "data" => array(
                 "id" => $this->data['id'],

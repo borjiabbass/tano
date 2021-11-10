@@ -8,6 +8,7 @@ class User{
     // object properties
     public $phone;
     public $id;
+    public $isAlready= false;
  
     // constructor
     public function __construct($db,$phone){
@@ -38,32 +39,24 @@ class User{
     function GetUserId(){
     
         // insert query
-        $query = "SELECT * FROM  " . $this->table_name ;
+        $query = "SELECT ID FROM  " . $this->table_name ;
             
     
         $stmt = $this->conn->prepare($query);
     
-        print_r($stmt);
         // bind the values
        // $stmt->bindParam(':phone_number', $this->phone);
         if($stmt->execute()){
-            echo "dale";
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            print_r($row);
+            $this->id = $row['ID'];
         };
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-        echo $this->phone;
-        print_r($row);
-        $this->id = $row['id'];
-        
-       
     }
     function isAlreadylogin(){
         $query = "SELECT is_already_register
             FROM " . $this->table_name . "
             WHERE is_already_register=1 And  phone_number = ?
             LIMIT 0,1";
- 
-    
         $stmt = $this->conn->prepare( $query );
     
         // sanitize
@@ -108,34 +101,29 @@ class User{
         return false;
     }
     function complate_profile($data){
-    
+        $isAlready=1;
         // insert query
         $query = "UPDATE " . $this->table_name . "
                 SET
                     is_already_register = :is_already_register , ".
-                    "name = :name , ".
+                    "name = :name ,".
                     "family = :family , ".
-                    "fav_id = :fave_id , ".
-                    "prof_id = :prof_id_id , ".
-                    "dis = :dis , ".
+                    "fav_id = :fav_id , ".
+                    "prof_id = :prof_id , ".
+                    "dis = :dis ".
                     " where id =".$this->id;
     
         $stmt = $this->conn->prepare($query);
-    
-    
-        // bind the values
-        $stmt->bindParam(':is_already_register',1);
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':family', $data['family']);
-        $stmt->bindParam(':prof_id',$data['prof_id']);
-        $stmt->bindParam(':fav_id',$data['fav_id']);
-        $stmt->bindParam(':dis',$data['dis']);
-       
+        $stmt->bindParam(':is_already_register',$isAlready);
+        $stmt->bindParam(':name', $data->name);
+        $stmt->bindParam(':family', $data->family);
+        $stmt->bindParam(':prof_id',$data->prof_id);
+        $stmt->bindParam(':fav_id',$data->fav_id);
+        $stmt->bindParam(':dis',$data->dis);
         // execute the query, also check if query was successful
         if($stmt->execute()){
             return true;
         }
-    
         return false;
     }
     
