@@ -1,34 +1,37 @@
 <?php
-class User{
+class Service{
  
     // database connection and table name
     private $conn;
-    private $table_name = "registertoken";
+    private $table_name = "services";
  
     // object properties
-    public $phone;
+    public $userId;
     public $id;
-    public $isAlready= false;
  
     // constructor
-    public function __construct($db,$phone){
-        $this->phone=$phone;
+    public function __construct($userId,$db){
+        $this->userId=$userId;
         $this->conn = $db;
     }
-    function Register(){
-    
+    function insertService($data){
+            print_r($data);
         // insert query
         $query = "INSERT INTO " . $this->table_name . "
                 SET
-                    phone_number = :phone_number";
+                    userId = :userId , 
+                    title = :title , 
+                    dis = :dis , 
+                    pic = :pic 
+                    ";
     
         $stmt = $this->conn->prepare($query);
     
-    
         // bind the values
-        $stmt->bindParam(':phone_number', $this->phone);
-        print_r($this->phone);
-       
+        $stmt->bindParam(':userId', $this->userId);
+        $stmt->bindParam(':title', $data->title);
+        $stmt->bindParam(':dis', $data->dis);
+        $stmt->bindParam(':pic', $data->pic);
         // execute the query, also check if query was successful
         if($stmt->execute()){
             return true;
@@ -36,27 +39,37 @@ class User{
     
         return false;
     }
-    function GetUserId(){
+    function fetchServises($num,$filters){
     
         // insert query
-        $query = "SELECT ID FROM  " . $this->table_name ;
-            
+        $query = "SECECT ID FROM  " . $this->table_name . "
+                WHERE ".
+                    foreach($filters as $filter){
+                        
+                    }
+                    "phone_number = :phone_number";
     
         $stmt = $this->conn->prepare($query);
     
+    
         // bind the values
-       // $stmt->bindParam(':phone_number', $this->phone);
+        $stmt->bindParam(':phone_number', $this->phone);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->id = $row['id'];
+        // execute the query, also check if query was successful
         if($stmt->execute()){
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            print_r($row);
-            $this->id = $row['ID'];
-        };
+            return true;
+        }
+    
+        return false;
     }
     function isAlreadylogin(){
         $query = "SELECT is_already_register
             FROM " . $this->table_name . "
             WHERE is_already_register=1 And  phone_number = ?
             LIMIT 0,1";
+ 
+    
         $stmt = $this->conn->prepare( $query );
     
         // sanitize
@@ -96,33 +109,6 @@ class User{
         $num = $stmt->rowCount();
     
         if($num>0){
-            return true;
-        }
-        return false;
-    }
-    function complate_profile($data){
-        $isAlready=1;
-        
-        // insert query
-        $query = "UPDATE " . $this->table_name . "
-                SET
-                    is_already_register = :is_already_register , ".
-                    "name = :name ,".
-                    "family = :family , ".
-                    "fav_id = :fav_id , ".
-                    "prof_id = :prof_id , ".
-                    "dis = :dis ".
-                    " where id =".$this->id;
-    
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':is_already_register',$isAlready);
-        $stmt->bindParam(':name', $data->name);
-        $stmt->bindParam(':family', $data->family);
-        $stmt->bindParam(':prof_id',$data->prof_id);
-        $stmt->bindParam(':fav_id',$data->fav_id);
-        $stmt->bindParam(':dis',$data->dis);
-        // execute the query, also check if query was successful
-        if($stmt->execute()){
             return true;
         }
         return false;
